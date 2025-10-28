@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المقاولات العامة - تحت إشراف جمال الريمي</title>
+    <meta name="description" content="شركة مقاولات عامة تقدم أعمال البناء، التشطيب، الأعمال الكهربائية والسباكة تحت إشراف جمال الريمي.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f62fe;
+            --primary-dark: #0043ce;
+            --primary-light: #4d8eff;
+            --secondary: #ff6b00;
+            --secondary-light: #ff8c3a;
+            --accent: #42ba96;
+            --accent-light: #6bd0b1;
+            --bg: #f7f9fc;
+            --card: #ffffff;
+            --text: #0b1320;
+            --text-light: #445062;
+            --border: #d7e0ef;
+            --shadow: 0 8px 24px rgba(12, 20, 30, 0.08);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+            --success: #42ba96;
+            --warning: #f9b115;
+            --error: #df4759;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            line-height: 1.6;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* تحسينات التمرير السلس */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* الخلفية المتحركة */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+        }
+
+        .shape-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary);
+            bottom: -150px;
+            right: -150px;
+            animation-delay: -5s;
+        }
+
+        .shape-3 {
+            width: 200px;
+            height: 200px;
+            background: var(--accent);
+            top: 50%;
+            left: 10%;
+            animation-delay: -10s;
+        }
+
+        .shape-4 {
+            width: 250px;
+            height: 250px;
+            background: var(--primary-light);
+            bottom: 20%;
+            right: 10%;
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(20px, 20px) rotate(90deg);
+            }
+            50% {
+                transform: translate(0, 40px) rotate(180deg);
+            }
+            75% {
+                transform: translate(-20px, 20px) rotate(270deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+
+        /* نظام الإشعارات */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 400px;
+        }
+
+        .notification {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            padding: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transform: translateX(-120%);
+            transition: transform 0.4s ease;
+            border-right: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .notification.success {
+            border-right-color: var(--success);
+        }
+
+        .notification.success::before {
+            background: var(--success);
+        }
+
+        .notification.warning {
+            border-right-color: var(--warning);
+        }
+
+        .notification.warning::before {
+            background: var(--warning);
+        }
+
+        .notification.error {
+            border-right-color: var(--error);
+        }
+
+        .notification.error::before {
+            background: var(--error);
+        }
+
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .notification.success .notification-icon {
+            background: var(--success);
+        }
+
+        .notification.warning .notification-icon {
+            background: var(--warning);
+        }
+
+        .notification.error .notification-icon {
+            background: var(--error);
+        }
+
+        .notification.default .notification-icon {
+            background: var(--primary);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+
+        .notification-message {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-progress {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .notification-progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 100%;
+            transform-origin: right;
+            animation: progress 5s linear forwards;
+        }
+
+        .notification.success .notification-progress-bar {
+            background: var(--success);
+        }
+
+        .notification.warning .notification-progress-bar {
+            background: var(--warning);
+        }
+
+        .notification.error .notification-progress-bar {
+            background: var(--error);
+        }
+
+        @keyframes progress {
+            from {
+                transform: scaleX(1);
+            }
+            to {
+                transform: scaleX(0);
+            }
+        }
+
+        /* الشريط العلوي */
+        header {
+            background: linear-gradient(135deg, rgba(15,98,254,0.95), rgba(6,45,90,0.95));
+            color: white;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand img {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .brand-text h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .brand-text p {
+            margin: 4px 0 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .supervisor {
+            background: rgba(255, 255, 255, 0.12);
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 14px;
+        }
+
+        /* القائمة */
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 24px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 6px 0;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* القائمة المتنقلة */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* القسم الرئيسي */
+        .hero {
+            padding: 60px 20px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(15, 98, 254, 0.05) 0%, rgba(255, 107, 0, 0.05) 100%);
+        }
+
+        .hero-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h2 {
+            font-size: 36px;
+            margin-bottom: 16px;
+            color: var(--primary);
+        }
+
+        .hero-text p {
+            font-size: 18px;
+            color: var(--text-light);
+            margin-bottom: 24px;
+            max-width: 600px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(15, 98, 254, 0.3);
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        .cta-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(15, 98, 254, 0.4);
+        }
+
+        .hero-image {
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            height: 400px;
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80') center/cover no-repeat;
+            opacity: 0.9;
+        }
+
+        /* الخدمات */
+        .services {
+            padding: 60px 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            color: var(--primary);
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 80px;
+            height: 4px;
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 28px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            border-top: 4px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(12, 20, 30, 0.12);
+        }
+
+        .card i {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .card h3 {
+            margin: 0 0 12px;
+            font-size: 20px;
+        }
+
+        .card p {
+            margin: 0;
+            color: var(--text-light);
+        }
+
+        /* المشاريع */
+        .projects {
+            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(255, 107, 0, 0.03) 0%, rgba(15, 98, 254, 0.03) 100%);
+        }
+
+        .projects-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .project-card {
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            background: white;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(12, 20, 30, 0.15);
+        }
+
+        .project-img {
+            height: 200px;
+            background: linear-gradient(135deg, #e9eef7, #d4e1f8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-info {
+            padding: 16px;
+        }
+
+        .project-info h4 {
+            margin: 0 0 8px;
+            font-size: 18px;
+        }
+
+        .project-info p {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        /* نموذج الاتصال */
+        .contact {
+            padding: 60px 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .contact-info {
+            background: var(--card);
+            padding: 28px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .contact-info h3 {
+            margin: 0 0 20px;
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .contact-details {
+            margin-bottom: 24px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .contact-item i {
+            width: 40px;
+            height: 40px;
+            background: rgba(15, 98, 254, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            margin-left: 12px;
+        }
+
+        .contact-form {
+            background: var(--card);
+            padding: 28px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .contact-form h3 {
+            margin: 0 0 20px;
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 16px;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15, 98, 254, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+        }
+
+        /* لماذا تختارنا */
+        .why-us {
+            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(15, 98, 254, 0.03) 0%, rgba(255, 107, 0, 0.03) 100%);
+        }
+
+        .why-us-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .feature {
+            background: var(--card);
+            padding: 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .feature i {
+            font-size: 24px;
+            color: var(--primary);
+            background: rgba(15, 98, 254, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feature-content h4 {
+            margin: 0 0 8px;
+            font-size: 18px;
+        }
+
+        .feature-content p {
+            margin: 0;
+            color: var(--text-light);
+        }
+
+        /* التذييل */
+        footer {
+            background: linear-gradient(135deg, #0a3d8f, #062d5a);
+            color: white;
+            padding: 40px 20px 20px;
+        }
+
+        .footer-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .footer-col h4 {
+            margin: 0 0 16px;
+            font-size: 18px;
+            position: relative;
+            padding-bottom: 8px;
+        }
+
+        .footer-col h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--secondary);
+        }
+
+        .footer-col p, .footer-col a {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+            display: block;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-col a:hover {
+            color: white;
+            padding-right: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .social-links a {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .developer-credit {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .developer-credit a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .developer-credit a:hover {
+            color: var(--secondary-light);
+        }
+
+        /* استجابة للهواتف */
+        @media (max-width: 992px) {
+            .contact {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 100%;
+                background: rgba(6, 45, 90, 0.98);
+                flex-direction: column;
+                padding: 20px;
+                text-align: center;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+            
+            nav ul.active {
+                display: flex;
+            }
+            
+            .hero-text h2 {
+                font-size: 28px;
+            }
+            
+            .section-title h2 {
+                font-size: 28px;
+            }
+            
+            .notification-container {
+                left: 10px;
+                right: 10px;
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .brand-text h1 {
+                font-size: 20px;
+            }
+            
+            .hero {
+                padding: 40px 20px;
+            }
+            
+            .services, .projects, .contact, .why-us {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الخلفية المتحركة -->
+    <div class="animated-bg">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+        <div class="bg-shape shape-4"></div>
+    </div>
+
+    <!-- نظام الإشعارات -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- الشريط العلوي -->
+    <header>
+        <div class="nav-container">
+            <div class="brand">
+                <img src="https://www.mosoah.com/wp-content/uploads/2020/01/%D8%B5%D9%88%D8%B1-%D8%B4%D8%B9%D8%A7%D8%B1-%D9%85%D9%82%D8%A7%D9%88%D9%84%D8%A7%D8%AA-%D8%B9%D8%A7%D9%85%D8%A9-%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9-1.png" alt="شعار الشركة">
+                <div class="brand-text">
+                    <h1>شركة الريمي للمقاولات العامة</h1>
+                    <p>بناء -- تشطيب -- كهرباء وسباكة -- إشراف محترف</p>
+                    <div class="supervisor">تحت إشراف: <strong>جمال الريمي</strong></div>
+                </div>
+            </div>
+            
+            <button class="mobile-menu-btn" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <ul id="mainMenu">
+                    <li><a href="#home">الرئيسية</a></li>
+                    <li><a href="#services">خدماتنا</a></li>
+                    <li><a href="#projects">مشاريعنا</a></li>
+                    <li><a href="#contact">اتصل بنا</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- القسم الرئيسي -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h2>نحو مشاريع أقوى وأجمل</h2>
+                <p>نسعى لتقديم أعمال مقاولات متكاملة مع التزام بمواعيد التسليم وجودة المواد والعمالة. خبرة في المباني السكنية والتجارية والديكورات الداخلية.</p>
+                <button class="cta-button" id="showNotificationBtn">اطلب عرض سعر</button>
+            </div>
+            <div class="hero-image">
+                <span>بناء المستقبل معاً</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- الخدمات -->
+    <section class="services" id="services">
+        <div class="section-title">
+            <h2>خدماتنا</h2>
+            <p>نقدم مجموعة متكاملة من خدمات المقاولات العامة لتلبية جميع احتياجاتك</p>
+        </div>
+        
+        <div class="cards">
+            <div class="card">
+                <i class="fas fa-hard-hat"></i>
+                <h3>أعمال البناء</h3>
+                <p>أعمال أساسات، خرسانة، تشييد هياكل إنشائية مع فرق عمل مؤهلة.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-paint-roller"></i>
+                <h3>التشطيبات الداخلية</h3>
+                <p>أرضيات، بلاط، جبس، دهانات وتشطيبات نهائية بروح حديثة.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-tools"></i>
+                <h3>الكهرباء والسباكة</h3>
+                <p>تنفيذ التركيبات الكهربائية والسباكات وفق معايير السلامة والجودة.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-clipboard-check"></i>
+                <h3>إدارة المشاريع</h3>
+                <p>إشراف فني ومتابعة وتنسيق بين جميع الفرق لضمان التسليم في الوقت المحدد.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- المشاريع -->
+    <section class="projects" id="projects">
+        <div class="projects-container">
+            <div class="section-title">
+                <h2>مشاريعنا</h2>
+                <p>نماذج من أعمالنا السابقة التي نفخر بها</p>
+            </div>
+            
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="مشروع بناء حديث">
+                    </div>
+                    <div class="project-info">
+                        <h4>مشروع بناء حديث</h4>
+                        <p>تصميم وتنفيذ مبنى سكني متكامل بأحدث التقنيات</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="https://images.unsplash.com/photo-1513584684374-8bab748fbf90?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1165&q=80" alt="تشطيب داخلي فاخر">
+                    </div>
+                    <div class="project-info">
+                        <h4>تشطيب داخلي فاخر</h4>
+                        <p>تشطيبات داخلية عالية الجودة باستخدام أفضل المواد</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="تصميم خارجي متميز">
+                    </div>
+                    <div class="project-info">
+                        <h4>تصميم خارجي متميز</h4>
+                        <p>تصميم واجهات خارجية مبتكرة وجذابة</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- الاتصال -->
+    <section class="contact" id="contact">
+        <div class="contact-info">
+            <h3>تواصل معنا</h3>
+            <div class="contact-details">
+                <div class="contact-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <div>
+                        <p><strong>الهاتف</strong></p>
+                        <p><a href="tel:+967000000000">+967 0 000 000</a></p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <p><strong>البريد الإلكتروني</strong></p>
+                        <p><a href="mailto:info@example.com">info@example.com</a></p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <p><strong>العنوان</strong></p>
+                        <p>صنعاء، اليمن (يمكن تعديل العنوان بحسب الموقع)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+        
+        <div class="contact-form">
+            <h3>اطلب عرض سعر</h3>
+            <p>اترك بياناتك وسنعود إليك خلال 24-48 ساعة.</p>
+            <form onsubmit="event.preventDefault();submitForm();">
+                <div class="form-group">
+                    <label for="name">الاسم الكامل</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">الهاتف / الجوال</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني (اختياري)</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="details">وصف مختصر للمشروع</label>
+                    <textarea id="details" name="details" placeholder="مثال: بناء عمارة 3 طوابق" required></textarea>
+                </div>
+                <button type="submit">إرسال الطلب</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- لماذا تختارنا -->
+    <section class="why-us">
+        <div class="why-us-container">
+            <div class="section-title">
+                <h2>لماذا تختارنا؟</h2>
+                <p>نحن نقدم قيمة مضافة لعملائنا من خلال التزامنا بالجودة والاحترافية</p>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-award"></i>
+                    <div class="feature-content">
+                        <h4>خبرة ومصداقية</h4>
+                        <p>أكثر من 15 عاماً من الخبرة في مجال المقاولات مع سجل حافل بالمشاريع الناجحة</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-users"></i>
+                    <div class="feature-content">
+                        <h4>فرق عمل محترفة</h4>
+                        <p>فرق عمل مدربة ومشرفين فنيين مؤهلين لضمان جودة التنفيذ</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-calendar-check"></i>
+                    <div class="feature-content">
+                        <h4>التزام بالمواعيد</h4>
+                        <p>نلتزم بمواعيد التسليم المتفق عليها مع الحفاظ على أعلى معايير الجودة</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- التذييل -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>عن الشركة</h4>
+                <p>شركة الريمي للمقاولات العامة تقدم خدمات متكاملة في مجال البناء والتشطيب تحت إشراف جمال الريمي.</p>
+            </div>
+            
+            <div class="footer-col">
+                <h4>روابط سريعة</h4>
+                <a href="#home">الرئيسية</a>
+                <a href="#services">خدماتنا</a>
+                <a href="#projects">مشاريعنا</a>
+                <a href="#contact">اتصل بنا</a>
+            </div>
+            
+            <div class="footer-col">
+                <h4>خدماتنا</h4>
+                <a href="#">أعمال البناء</a>
+                <a href="#">التشطيبات الداخلية</a>
+                <a href="#">الكهرباء والسباكة</a>
+                <a href="#">إدارة المشاريع</a>
+            </div>
+            
+            <div class="footer-col">
+                <h4>اتصل بنا</h4>
+                <p><i class="fas fa-phone-alt"></i> +967 0 000 000</p>
+                <p><i class="fas fa-envelope"></i> info@example.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> صنعاء، اليمن</p>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <small>© 2025 شركة الريمي للمقاولات العامة — تحت إشراف جمال الريمي. جميع الحقوق محفوظة.</small>
+        </div>
+        <div class="developer-credit">
+            <small>مطور بواسطة: <a href="#">عبد الوهاب عبد الواحد الريمي</a></small>
+        </div>
+    </footer>
+
+    <script>
+        // تفعيل القائمة المتنقلة
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('mainMenu').classList.toggle('active');
+        });
+        
+        // إغلاق القائمة عند النقر على رابط
+        document.querySelectorAll('#mainMenu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mainMenu').classList.remove('active');
+            });
+        });
+        
+        // نظام الإشعارات
+        function showNotification(title, message, type = 'default', duration = 5000) {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            let iconClass = 'fas fa-info-circle';
+            if (type === 'success') iconClass = 'fas fa-check-circle';
+            if (type === 'warning') iconClass = 'fas fa-exclamation-triangle';
+            if (type === 'error') iconClass = 'fas fa-exclamation-circle';
+            
+            notification.innerHTML = `
+                <div class="notification-icon">
+                    <i class="${iconClass}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <button class="notification-close">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="notification-progress">
+                    <div class="notification-progress-bar"></div>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            // إظهار الإشعار بعد إضافته مباشرة
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            // إغلاق الإشعار يدويًا
+            const closeBtn = notification.querySelector('.notification-close');
+            closeBtn.addEventListener('click', () => {
+                closeNotification(notification);
+            });
+            
+            // إغلاق الإشعار تلقائيًا بعد المدة المحددة
+            if (duration > 0) {
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        closeNotification(notification);
+                    }
+                }, duration);
+            }
+        }
+        
+        function closeNotification(notification) {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 400);
+        }
+        
+        // محاكاة إرسال النموذج
+        function submitForm() {
+            const name = document.getElementById('name').value;
+            
+            // إظهار إشعار النجاح
+            showNotification(
+                'تم إرسال طلبك بنجاح',
+                `شكراً ${name}، سنتواصل معك خلال 24 ساعة.`,
+                'success'
+            );
+            
+            // إعادة تعيين النموذج
+            document.querySelector('form').reset();
+        }
+        
+        // إضافة تأثير التمرير السلس للروابط
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // إظهار إشعار ترحيبي عند تحميل الصفحة
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                showNotification(
+                    'مرحباً بك في موقعنا',
+                    'نحن هنا لخدمتك في جميع أعمال المقاولات والبناء.',
+                    'default',
+                    4000
+                );
+            }, 1000);
+        });
+        
+        // زر لإظهار إشعار تجريبي
+        document.getElementById('showNotificationBtn').addEventListener('click', () => {
+            showNotification(
+                'طلب عرض سعر',
+                'سيتم تحويلك إلى نموذج الاتصال لإكمال طلبك.',
+                'default'
+            );
+            
+            // التمرير إلى قسم الاتصال
+            document.getElementById('contact').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+        
+        // إضافة إشعارات تجريبية أخرى
+        setTimeout(() => {
+            showNotification(
+                'عرض خاص',
+                'خصم 10% على أعمال التشطيب لهذا الشهر فقط!',
+                'warning',
+                6000
+            );
+        }, 5000);
+    </script>
+</body>
+</html>
